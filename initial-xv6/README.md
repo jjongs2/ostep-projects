@@ -68,6 +68,11 @@ inside the `initial-xv6` directory:
 prompt> ./test-getreadcounts.sh
 ```
 
+```
+test 1: passed
+test 2: passed
+```
+
 If you implemented things correctly, you should get some notification
 that the tests passed. If not ...
 

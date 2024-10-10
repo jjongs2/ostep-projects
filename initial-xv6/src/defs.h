@@ -121,6 +121,11 @@ int             wait(void);
 void            wakeup(void*);
 void            yield(void);
 
+// readcount.c
+extern int      readcount;
+void			readcountinit(void);
+extern struct spinlock readcountlock;
+
 // swtch.S
 void            swtch(struct context**, struct context*);
 
