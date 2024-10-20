@@ -88,6 +88,43 @@ be pretty boring, but should clearly show that your lottery scheduler works as
 desired.
 
 
+## Result
+
+```sh
+prompt> make qemu-nox | tee output.txt
+```
+
+```sh
+init: starting sh
+$ schedtest
+```
+
+```
+Iteration 1
+PID 4 | Tickets 30 | Ticks 42
+PID 5 | Tickets 20 | Ticks 70
+PID 6 | Tickets 10 | Ticks 27
+
+Iteration 2
+PID 4 | Tickets 30 | Ticks 136
+PID 5 | Tickets 20 | Ticks 124
+PID 6 | Tickets 10 | Ticks 52
+
+⋮
+
+Iteration 25
+PID 4 | Tickets 30 | Ticks 2109
+PID 5 | Tickets 20 | Ticks 1435
+PID 6 | Tickets 10 | Ticks 664
+
+scheduler test finished
+```
+
+```sh
+prompt> python graph.py output.txt
+```
+
+![graph](./src/graph.png)
 
 
 
