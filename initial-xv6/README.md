@@ -59,18 +59,13 @@ Using gdb (the debugger) may be helpful in understanding code, doing code
 traces, and is helpful for later projects too. Get familiar with this fine
 tool!
 
-# Running Tests
+## Running Tests
 
 Running tests for your system call is easy. Just do the following from
 inside the `initial-xv6` directory:
 
 ```sh
 prompt> ./test-getreadcounts.sh
-```
-
-```
-test 1: passed
-test 2: passed
 ```
 
 If you implemented things correctly, you should get some notification
@@ -99,3 +94,9 @@ The other usual testing flags are also available. See [the testing
 README](https://github.com/remzi-arpacidusseau/ostep-projects/blob/master/tester/README.md)
 for details.
 
+## Result
+
+```
+test 1: passed
+test 2: passed
+```
