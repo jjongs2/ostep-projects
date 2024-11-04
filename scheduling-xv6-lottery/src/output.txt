@@ -1,0 +1,144 @@
+nmeta 59 (boot, super, log blocks 30 inode blocks 26, bitmap blocks 1) blocks 941 total 1000
+balloc: first 677 blocks have been allocated
+balloc: write bitmap block at sector 58
+c[?7l[2J[0mSeaBIOS (version 1.15.0-1)
+
+
+iPXE (https://ipxe.org) 00:03.0 CA00 PCI2.10 PnP PMM+1FF8B4A0+1FECB4A0 CA00
+Press Ctrl-B to configure iPXE (PCI 00:03.0)...
+                                                                               
+
+
+Booting from Hard Disk..xv6...
+cpu0: starting 0
+sb: size 1000 nblocks 941 ninodes 200 nlog 30 logstart 2 inodestart 32 bmap start 58
+init: starting sh
+$ schedtest
+Iteration 1
+PID 4 | Tickets 30 | Ticks 73
+PID 5 | Tickets 20 | Ticks 46
+PID 6 | Tickets 10 | Ticks 19
+
+Iteration 2
+PID 4 | Tickets 30 | Ticks 167
+PID 5 | Tickets 20 | Ticks 100
+PID 6 | Tickets 10 | Ticks 44
+
+Iteration 3
+PID 4 | Tickets 30 | Ticks 224
+PID 5 | Tickets 20 | Ticks 144
+PID 6 | Tickets 10 | Ticks 60
+
+Iteration 4
+PID 4 | Tickets 30 | Ticks 280
+PID 5 | Tickets 20 | Ticks 191
+PID 6 | Tickets 10 | Ticks 84
+
+Iteration 5
+PID 4 | Tickets 30 | Ticks 335
+PID 5 | Tickets 20 | Ticks 239
+PID 6 | Tickets 10 | Ticks 100
+
+Iteration 6
+PID 4 | Tickets 30 | Ticks 395
+PID 5 | Tickets 20 | Ticks 276
+PID 6 | Tickets 10 | Ticks 117
+
+Iteration 7
+PID 4 | Tickets 30 | Ticks 515
+PID 5 | Tickets 20 | Ticks 350
+PID 6 | Tickets 10 | Ticks 148
+
+Iteration 8
+PID 4 | Tickets 30 | Ticks 589
+PID 5 | Tickets 20 | Ticks 396
+PID 6 | Tickets 10 | Ticks 166
+
+Iteration 9
+PID 4 | Tickets 30 | Ticks 688
+PID 5 | Tickets 20 | Ticks 460
+PID 6 | Tickets 10 | Ticks 208
+
+Iteration 10
+PID 4 | Tickets 30 | Ticks 758
+PID 5 | Tickets 20 | Ticks 500
+PID 6 | Tickets 10 | Ticks 239
+
+Iteration 11
+PID 4 | Tickets 30 | Ticks 869
+PID 5 | Tickets 20 | Ticks 580
+PID 6 | Tickets 10 | Ticks 270
+
+Iteration 12
+PID 4 | Tickets 30 | Ticks 949
+PID 5 | Tickets 20 | Ticks 631
+PID 6 | Tickets 10 | Ticks 290
+
+Iteration 13
+PID 4 | Tickets 30 | Ticks 1026
+PID 5 | Tickets 20 | Ticks 680
+PID 6 | Tickets 10 | Ticks 313
+
+Iteration 14
+PID 4 | Tickets 30 | Ticks 1102
+PID 5 | Tickets 20 | Ticks 721
+PID 6 | Tickets 10 | Ticks 335
+
+Iteration 15
+PID 4 | Tickets 30 | Ticks 1165
+PID 5 | Tickets 20 | Ticks 756
+PID 6 | Tickets 10 | Ticks 351
+
+Iteration 16
+PID 4 | Tickets 30 | Ticks 1221
+PID 5 | Tickets 20 | Ticks 786
+PID 6 | Tickets 10 | Ticks 369
+
+Iteration 17
+PID 4 | Tickets 30 | Ticks 1274
+PID 5 | Tickets 20 | Ticks 817
+PID 6 | Tickets 10 | Ticks 387
+
+Iteration 18
+PID 4 | Tickets 30 | Ticks 1328
+PID 5 | Tickets 20 | Ticks 855
+PID 6 | Tickets 10 | Ticks 404
+
+Iteration 19
+PID 4 | Tickets 30 | Ticks 1430
+PID 5 | Tickets 20 | Ticks 926
+PID 6 | Tickets 10 | Ticks 440
+
+Iteration 20
+PID 4 | Tickets 30 | Ticks 1504
+PID 5 | Tickets 20 | Ticks 981
+PID 6 | Tickets 10 | Ticks 462
+
+Iteration 21
+PID 4 | Tickets 30 | Ticks 1607
+PID 5 | Tickets 20 | Ticks 1049
+PID 6 | Tickets 10 | Ticks 494
+
+Iteration 22
+PID 4 | Tickets 30 | Ticks 1666
+PID 5 | Tickets 20 | Ticks 1092
+PID 6 | Tickets 10 | Ticks 504
+
+Iteration 23
+PID 4 | Tickets 30 | Ticks 1770
+PID 5 | Tickets 20 | Ticks 1170
+PID 6 | Tickets 10 | Ticks 542
+
+Iteration 24
+PID 4 | Tickets 30 | Ticks 1830
+PID 5 | Tickets 20 | Ticks 1201
+PID 6 | Tickets 10 | Ticks 553
+
+Iteration 25
+PID 4 | Tickets 30 | Ticks 1918
+PID 5 | Tickets 20 | Ticks 1267
+PID 6 | Tickets 10 | Ticks 579
+
+scheduler test finished
+$ QEMU: Terminated
+

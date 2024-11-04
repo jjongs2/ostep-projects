@@ -6,10 +6,12 @@
 #include "x86.h"
 #include "proc.h"
 #include "spinlock.h"
+#include "pstat.h"
 
 struct {
   struct spinlock lock;
   struct proc proc[NPROC];
+  int total_tickets;
 } ptable;
 
 static struct proc *initproc;
@@ -88,6 +90,8 @@ allocproc(void)
 found:
   p->state = EMBRYO;
   p->pid = nextpid++;
+  p->tickets = 1;
+  p->ticks = 0;
 
   release(&ptable.lock);
 
@@ -149,6 +153,7 @@ userinit(void)
   acquire(&ptable.lock);
 
   p->state = RUNNABLE;
+  ptable.total_tickets += p->tickets;
 
   release(&ptable.lock);
 }
@@ -199,6 +204,7 @@ fork(void)
   np->sz = curproc->sz;
   np->parent = curproc;
   *np->tf = *curproc->tf;
+  np->tickets = curproc->tickets;
 
   // Clear %eax so that fork returns 0 in the child.
   np->tf->eax = 0;
@@ -215,6 +221,7 @@ fork(void)
   acquire(&ptable.lock);
 
   np->state = RUNNABLE;
+  ptable.total_tickets += np->tickets;
 
   release(&ptable.lock);
 
@@ -230,6 +237,7 @@ exit(void)
   struct proc *curproc = myproc();
   struct proc *p;
   int fd;
+  int tickets;
 
   if(curproc == initproc)
     panic("init exiting");
@@ -247,7 +255,11 @@ exit(void)
   end_op();
   curproc->cwd = 0;
 
+  tickets = curproc->tickets;
+  curproc->tickets = 0;
+
   acquire(&ptable.lock);
+  ptable.total_tickets -= tickets;
 
   // Parent might be sleeping in wait().
   wakeup1(curproc->parent);
@@ -322,6 +334,7 @@ wait(void)
 void
 scheduler(void)
 {
+  int counter, winner;
   struct proc *p;
   struct cpu *c = mycpu();
   c->proc = 0;
@@ -330,26 +343,35 @@ scheduler(void)
     // Enable interrupts on this processor.
     sti();
 
+    if (ptable.total_tickets == 0)
+      continue;
+
     // Loop over process table looking for process to run.
     acquire(&ptable.lock);
+    winner = random() % ptable.total_tickets;
+    counter = 0;
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
       if(p->state != RUNNABLE)
         continue;
-
-      // Switch to chosen process.  It is the process's job
-      // to release ptable.lock and then reacquire it
-      // before jumping back to us.
-      c->proc = p;
-      switchuvm(p);
-      p->state = RUNNING;
-
-      swtch(&(c->scheduler), p->context);
-      switchkvm();
-
-      // Process is done running for now.
-      // It should have changed its p->state before coming back.
-      c->proc = 0;
+      counter += p->tickets;
+      if(counter > winner)
+        break;
     }
+
+    // Switch to chosen process.  It is the process's job
+    // to release ptable.lock and then reacquire it
+    // before jumping back to us.
+    c->proc = p;
+    switchuvm(p);
+    p->state = RUNNING;
+    p->ticks++;
+
+    swtch(&(c->scheduler), p->context);
+    switchkvm();
+
+    // Process is done running for now.
+    // It should have changed its p->state before coming back.
+    c->proc = 0;
     release(&ptable.lock);
 
   }
@@ -438,6 +460,7 @@ sleep(void *chan, struct spinlock *lk)
   // Go to sleep.
   p->chan = chan;
   p->state = SLEEPING;
+  ptable.total_tickets -= p->tickets;
 
   sched();
 
@@ -460,8 +483,10 @@ wakeup1(void *chan)
   struct proc *p;
 
   for(p = ptable.proc; p < &ptable.proc[NPROC]; p++)
-    if(p->state == SLEEPING && p->chan == chan)
+    if(p->state == SLEEPING && p->chan == chan){
       p->state = RUNNABLE;
+      ptable.total_tickets += p->tickets;
+    }
 }
 
 // Wake up all processes sleeping on chan.
@@ -486,8 +511,10 @@ kill(int pid)
     if(p->pid == pid){
       p->killed = 1;
       // Wake process from sleep if necessary.
-      if(p->state == SLEEPING)
+      if(p->state == SLEEPING){
         p->state = RUNNABLE;
+        ptable.total_tickets += p->tickets;
+      }
       release(&ptable.lock);
       return 0;
     }
@@ -531,4 +558,39 @@ procdump(void)
     }
     cprintf("\n");
   }
+}
+
+// Set the number of tickets of the calling process.
+int
+settickets(int number)
+{
+  struct proc *curproc = myproc();
+
+  if(number < 1)
+    return -1;
+  acquire(&ptable.lock);
+  ptable.total_tickets += number - curproc->tickets;
+  release(&ptable.lock);
+  curproc->tickets = number;
+  return 0;
+}
+
+// Get some information about all running processes.
+int
+getpinfo(struct pstat *ps)
+{
+  int i;
+  struct proc *p;
+
+  if(ps == 0)
+    return -1;
+  acquire(&ptable.lock);
+  for(i = 0, p = ptable.proc; p < &ptable.proc[NPROC]; i++, p++){
+    ps->inuse[i] = (p->state != UNUSED);
+    ps->tickets[i] = p->tickets;
+    ps->pid[i] = p->pid;
+    ps->ticks[i] = p->ticks;
+  }
+  release(&ptable.lock);
+  return 0;
 }
