@@ -105,7 +105,7 @@ attmept to dereference a null pointer...
 pid 3 nulltest: trap 14 err 4 on cpu 0 eip 0x101d addr 0x0--kill proc
 ```
 
-<br>
+---
 
 ```sh
 $ protecttest
