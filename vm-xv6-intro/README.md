@@ -84,6 +84,44 @@ region of memory. In both cases, xv6 should trap and kill the process (this
 will happen without too much trouble on your part, if you do the project in a
 sensible way).
 
+## Result
+
+```sh
+$ nulltest
+```
+
+**before**
+
+```
+attmept to dereference a null pointer...
+0x8D
+should not get here!
+```
+
+**after**
+
+```
+attmept to dereference a null pointer...
+pid 3 nulltest: trap 14 err 4 on cpu 0 eip 0x101d addr 0x0--kill proc
+```
+
+<br>
+
+```sh
+$ protecttest
+```
+
+```
+*p = 'a'
+
+attempt to write to protected page...
+pid 4 protecttest: trap 14 err 7 on cpu 0 eip 0x10e5 addr 0x4000--kill proc
+
+attempt to write to unprotected page...
+*p = 'c'
+
+protect test finished
+```
 
 
 

@@ -322,7 +322,7 @@ copyuvm(pde_t *pgdir, uint sz)
 
   if((d = setupkvm()) == 0)
     return 0;
-  for(i = 0; i < sz; i += PGSIZE){
+  for(i = PGSIZE; i < sz; i += PGSIZE){
     if((pte = walkpgdir(pgdir, (void *) i, 0)) == 0)
       panic("copyuvm: pte should exist");
     if(!(*pte & PTE_P))
@@ -382,6 +382,51 @@ copyout(pde_t *pgdir, uint va, void *p, uint len)
     buf += n;
     va = va0 + PGSIZE;
   }
+  return 0;
+}
+
+// Change the protection bits of the page range
+// starting at addr and of len pages to be read only.
+int
+mprotect(void *addr, int len)
+{
+  uint a = (uint)addr;
+  struct proc *curproc = myproc();
+  pde_t *pgdir = curproc->pgdir;
+  pte_t *pte;
+
+  if(a % PGSIZE != 0 || len <= 0 || a + len*PGSIZE > curproc->sz)
+    return -1;
+  for(; len > 0; len--){
+    pte = walkpgdir(pgdir, (void*)a, 0);
+    if(!pte || !(*pte & PTE_P))
+      return -1;
+    *pte &= ~PTE_W;
+    a += PGSIZE;
+  }
+  lcr3(V2P(pgdir));
+  return 0;
+}
+
+// Set the region back to both readable and writeable.
+int
+munprotect(void *addr, int len)
+{
+  uint a = (uint)addr;
+  struct proc *curproc = myproc();
+  pde_t *pgdir = curproc->pgdir;
+  pte_t *pte;
+
+  if(a % PGSIZE != 0 || len <= 0 || a + len*PGSIZE > curproc->sz)
+    return -1;
+  for(; len > 0; len--){
+    pte = walkpgdir(pgdir, (void*)a, 0);
+    if(!pte || !(*pte & PTE_P))
+      return -1;
+    *pte |= PTE_W;
+    a += PGSIZE;
+  }
+  lcr3(V2P(pgdir));
   return 0;
 }
 
