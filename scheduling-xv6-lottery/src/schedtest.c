@@ -10,13 +10,13 @@ static int
 create_child(int tickets)
 {
   int pid;
-  
+
   pid = fork();
-  if(pid < 0) {
+  if(pid < 0){
     printf(1, "fork failed\n");
     exit();
   }
-  if(pid == 0) {
+  if(pid == 0){
     settickets(tickets);
     while(1)
       ;
@@ -46,9 +46,9 @@ main(void)
 
   for(i = 0; i < NUM_CHILDREN; i++)
     pids[i] = create_child(tickets[i]);
-  for(i = 1; i <= NUM_ITERATIONS; i++) {
+  for(i = 1; i <= NUM_ITERATIONS; i++){
     sleep(SLEEP_TICKS);
-    if (getpinfo(&ps) < 0) {
+    if(getpinfo(&ps) < 0){
       printf(1, "getpinfo failed\n");
       break;
     }

@@ -343,7 +343,7 @@ scheduler(void)
     // Enable interrupts on this processor.
     sti();
 
-    if (ptable.total_tickets == 0)
+    if(ptable.total_tickets == 0)
       continue;
 
     // Loop over process table looking for process to run.
