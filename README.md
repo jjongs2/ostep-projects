@@ -35,45 +35,6 @@ code is written in one shot (impressive!), and (c) that it works perfectly
 (well done!). Even for simple assignments, it is likely that the
 compile/run/debug cycle might take a few iterations.
 
-## C/Linux Projects
-
-### Initial Projects
-
-These projects are meant to get you warmed up with programming in the C/UNIX
-environment. None are meant to be particularly hard, but should be enough so
-that you can get more comfortable programming. 
-
-Realize the best thing you can do to learn to program in any environment is to
-program **a lot**. These small projects are only the beginning of that
-journey; you'll have to do more on your own to truly become proficient.
-
-* [Unix Utilities](initial-utilities) (cat, grep, zip/unzip)
-* Sort (text-based)
-* Sort (binary)
-* [Reverse](initial-reverse) (very simple reverse program)
-
-### Processes and Scheduling
-
-* [Shell](processes-shell)
-
-### Virtual Memory
-
-* Memory Allocator
-
-### Concurrency
-
-* [Web Server](concurrency-webserver)
-* [Parallel Zip](concurrency-pzip)
-* [MapReduce](concurrency-mapreduce)
-* Web Crawler
-
-### File Systems
-
-* [File System Checker](filesystems-checker)
-
-### Distributed Systems
-
-
 ## Kernel Hacking Projects (xv6)
 
 These projects all are to be done inside the
