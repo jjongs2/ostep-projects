@@ -3,6 +3,14 @@
 #include "fcntl.h"
 #include "user.h"
 #include "x86.h"
+#include "mmu.h"
+
+static inline uint
+fetch_and_add(uint *addr, uint val)
+{
+  asm volatile("lock; xaddl %0, %1" : "+r" (val), "+m" (*addr) : : "memory");
+  return val;
+}
 
 char*
 strcpy(char *s, const char *t)
@@ -103,4 +111,53 @@ memmove(void *vdst, const void *vsrc, int n)
   while(n-- > 0)
     *dst++ = *src++;
   return vdst;
+}
+
+int
+thread_create(void (*start_routine)(void *, void *), void *arg1, void *arg2)
+{
+  int pid;
+  void *stack;
+
+  if((stack = malloc(2*PGSIZE - 1)) == 0)
+    return -1;
+  stack = (void*)PGROUNDUP((uint)stack);
+  if ((pid = clone(start_routine, arg1, arg2, stack)) < 0)
+    return -1;
+  return pid;
+}
+
+int
+thread_join(void)
+{
+  int pid;
+  void *stack;
+
+  if((pid = join(&stack)) < 0)
+    return -1;
+  free(stack);
+  return pid;
+}
+
+void
+lock_acquire(lock_t *lock)
+{
+  int myturn;
+
+  myturn = fetch_and_add(&lock->ticket, 1);
+  while(lock->turn != myturn)
+    ;
+}
+
+void
+lock_release(lock_t *lock)
+{
+  lock->turn++;
+}
+
+void
+lock_init(lock_t *lock)
+{
+  lock->ticket = 0;
+  lock->turn = 0;
 }

@@ -47,12 +47,17 @@ sys_sbrk(void)
 {
   int addr;
   int n;
+  struct proc *curproc = myproc();
 
   if(argint(0, &n) < 0)
     return -1;
-  addr = myproc()->sz;
-  if(growproc(n) < 0)
+  acquire(curproc->vmlock);
+  addr = curproc->sz;
+  if(growproc(n) < 0){
+    release(curproc->vmlock);
     return -1;
+  }
+  release(curproc->vmlock);
   return addr;
 }
 
@@ -88,4 +93,28 @@ sys_uptime(void)
   xticks = ticks;
   release(&tickslock);
   return xticks;
+}
+
+int
+sys_clone(void)
+{
+  void (*fcn)(void*, void*);
+  void *arg1, *arg2, *stack;
+
+  if(argptr(0, (void*)&fcn, sizeof(fcn)) < 0 ||
+     argptr(1, (void*)&arg1, sizeof(arg1)) < 0 ||
+     argptr(2, (void*)&arg2, sizeof(arg2)) < 0 ||
+     argptr(3, (void*)&stack, sizeof(stack)) < 0)
+    return -1;
+  return clone(fcn, arg1, arg2, stack);
+}
+
+int
+sys_join(void)
+{
+  void **stack;
+
+  if(argptr(0, (void*)&stack, sizeof(stack)) < 0)
+    return -1;
+  return join(stack);
 }

@@ -127,6 +127,29 @@ Chapter 3) and the details of call/return. All of this will be useful in
 getting `clone()` above to set things up properly on the user stack of the
 child thread.
 
+## Result
+
+```sh
+$ threadtest
+```
+
+```
+=== Testing shared variable synchronization ===
+thread 0 running...
+thread 1 running...
+thread 2 running...
+thread 3 running...
+final count: 4000 (expected: 4000)
+
+=== Testing malloc synchronization ===
+thread 0 running...
+thread 1 running...
+thread 2 running...
+thread 3 running...
+malloc test passed
+
+thread test finished
+```
 
 
 
